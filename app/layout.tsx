@@ -27,10 +27,39 @@ const notoSansKr = Noto_Sans_KR({
   weight: ["400", "500", "700"],
 });
 
+const siteTitle = "리브한의원";
+const siteDescription =
+  "체질 맞춤 다이어트부터 척추관절, 보양 처방까지 — 리브한의원이 근본부터 다스립니다.";
+const ogImage = "/images/hero/hero_hanbang_01.png";
+
 export const metadata: Metadata = {
-  title: "리브한의원",
-  description:
-    "체질 맞춤 다이어트부터 척추관절, 보양 처방까지 — 리브한의원이 근본부터 다스립니다.",
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"
+  ),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: ogImage,
+        width: 2000,
+        height: 1125,
+        alt: siteTitle,
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [ogImage],
+  },
 };
 
 export default function RootLayout({
