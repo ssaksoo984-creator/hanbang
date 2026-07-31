@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { ComponentPropsWithoutRef } from "react";
+import type { HTMLMotionProps } from "framer-motion";
+import type { ReactNode } from "react";
 
 type Variant = "outline" | "outline-light" | "filled" | "ghost";
 type Size = "sm" | "md" | "lg";
@@ -24,10 +25,11 @@ const sizeClasses: Record<Size, string> = {
   lg: "px-8 py-4 text-sm tracking-widest",
 };
 
-interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   variant?: Variant;
   size?: Size;
   href?: string;
+  children?: ReactNode;
 }
 
 export default function Button({

@@ -27,9 +27,12 @@ export default function PopupBanner({ popups }: PopupBannerProps) {
   const [visibleIds, setVisibleIds] = useState<string[]>([]);
 
   useEffect(() => {
-    setVisibleIds(
-      popups.filter((p) => p.enabled && !isHiddenToday(p.id)).map((p) => p.id)
-    );
+    const computeVisible = () => {
+      setVisibleIds(
+        popups.filter((p) => p.enabled && !isHiddenToday(p.id)).map((p) => p.id)
+      );
+    };
+    computeVisible();
   }, [popups]);
 
   const dismiss = (id: string) =>

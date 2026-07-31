@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+"use client";
+
+import { motion, type Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 interface SectionTitleProps {
@@ -21,7 +23,7 @@ export default function SectionTitle({
     triggerOnce: true,
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -31,7 +33,7 @@ export default function SectionTitle({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
