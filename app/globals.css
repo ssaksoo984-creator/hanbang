@@ -1,0 +1,60 @@
+@import url("//cdn.jsdelivr.net/font-iropke-batang/1.2/font-iropke-batang.css");
+@import "tailwindcss";
+
+:root {
+  --canvas: #fffdf9;
+  --ink: #2f2820;
+  --night: #3c2f22;
+  --gold: #bf8a4c;
+  --rule: #ece3d2;
+  --dim: #97897a;
+  --sand: #f3e9d2;
+  --sky: #d3e2ea;
+  --blush: #f4dcd2;
+  --navy: #1b2436;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-night: var(--night);
+  --color-gold: var(--gold);
+  --color-rule: var(--rule);
+  --color-dim: var(--dim);
+  --color-sand: var(--sand);
+  --color-sky: var(--sky);
+  --color-blush: var(--blush);
+  --color-navy: var(--navy);
+  --container-6xl: 1440px;
+  --font-serif: var(--font-cormorant);
+  --font-serif-ko: "Iropke Batang", var(--font-noto-serif-kr), serif;
+  --font-sans-ko: var(--font-noto-sans-kr);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.shimmer-text {
+  background-image: linear-gradient(
+    100deg,
+    var(--ink) 40%,
+    var(--gold) 50%,
+    var(--ink) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3.5s linear infinite;
+}
