@@ -93,19 +93,18 @@ export default function LocationSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1], delay: 0.15 }}
-            className="relative flex h-80 lg:h-auto min-h-80 items-center justify-center overflow-hidden rounded-2xl bg-rule"
+            className="relative w-full overflow-hidden rounded-2xl bg-rule"
           >
             {/* eslint-disable @next/next/no-img-element */}
             <div
               style={{
                 font: "normal normal 400 12px/normal dotum, sans-serif",
-                width: "640px",
-                height: "392px",
+                width: "100%",
                 color: "#333",
                 position: "relative",
               }}
             >
-              <div style={{ height: "360px" }}>
+              <div>
                 <a
                   href="https://map.kakao.com/?urlX=509837.50000000227&urlY=1112652.4999999953&name=서울특별시 강남구 언주로98길 31-6&map_type=TYPE_MAP&from=roughmap"
                   target="_blank"
@@ -116,7 +115,7 @@ export default function LocationSection() {
                     src="http://t1.daumcdn.net/roughmap/imgmap/530d9a7c4e7b9f0917f59770190a563aeb5db678e4a8f23c81a2750ea62cd71b"
                     width="638"
                     height="358"
-                    style={{ border: "1px solid #ccc" }}
+                    style={{ width: "100%", height: "auto", display: "block", border: "1px solid #ccc" }}
                     alt="리브한의원 카카오맵 위치"
                   />
                 </a>
