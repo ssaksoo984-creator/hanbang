@@ -6,28 +6,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperClass } from "swiper/types";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { heroSlides, heroUi } from "../../_i18n/content";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-const slides = [
+const slideImages = [
   {
-    sub: "LIV HANBANG CLINIC",
-    title: "근본을 다스리는\n리브한의원",
-    desc: "체질을 살펴 처방하는 정직한 한의학",
     bg: "/images/hero/hero_hanbang_01.png",
     bgMobile: "/images/hero/hero_hanbang_01_mo.png",
   },
   {
-    sub: "20 YEARS OF EXPERIENCE",
-    title: "20년 임상 경력\n한의사 직접 진료",
-    desc: "처음 상담부터 치료 끝까지 원장이 함께합니다",
     bg: "/images/hero/hero_hanbang_02.png",
     bgMobile: "/images/hero/hero_hanbang_02_mo.png",
   },
   {
-    sub: "CUSTOM DIET CLINIC",
-    title: "체질을 알면 다이어트가 쉬워집니다",
-    desc: "한약·침·상담이 함께하는 체질 맞춤 다이어트",
     bg: "/images/hero/hero_hanbang_03.png",
     bgMobile: "/images/hero/hero_hanbang_03_mo.png",
   },
@@ -37,6 +30,9 @@ export default function HeroSlider() {
   const swiperRef = useRef<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [progressWidth, setProgressWidth] = useState(0);
+  const { locale } = useLocale();
+  const slides = heroSlides[locale].map((slide, i) => ({ ...slide, ...slideImages[i] }));
+  const ui = heroUi[locale];
 
   return (
     <section className="relative -mt-[6.5rem] h-screen min-h-[640px] overflow-hidden bg-night">
@@ -91,7 +87,7 @@ export default function HeroSlider() {
         <div className="max-w-6xl mx-auto px-6">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeIndex}
+              key={`${locale}-${activeIndex}`}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -118,7 +114,7 @@ export default function HeroSlider() {
       {/* 좌우 화살표 */}
       <motion.button
         onClick={() => swiperRef.current?.slidePrev()}
-        aria-label="이전 슬라이드"
+        aria-label={ui.prev}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -130,7 +126,7 @@ export default function HeroSlider() {
       </motion.button>
       <motion.button
         onClick={() => swiperRef.current?.slideNext()}
-        aria-label="다음 슬라이드"
+        aria-label={ui.next}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}

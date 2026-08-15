@@ -1,3 +1,5 @@
+import type { Locale } from "../_i18n/LanguageContext";
+
 export type ConstitutionType = "taeyang" | "taeeum" | "soyang" | "soeum";
 
 export interface QuizOption {
@@ -12,7 +14,7 @@ export interface QuizQuestion {
 }
 
 // 문항 순서 : 태양 · 태음 · 소양 · 소음
-export const quizQuestions: QuizQuestion[] = [
+const quizQuestionsKo: QuizQuestion[] = [
   {
     id: 1,
     text: "나의 체형은?",
@@ -115,6 +117,113 @@ export const quizQuestions: QuizQuestion[] = [
   },
 ];
 
+const quizQuestionsEn: QuizQuestion[] = [
+  {
+    id: 1,
+    text: "What's your body type?",
+    options: [
+      { label: "Broad shoulders, upper body is more developed", type: "taeyang" },
+      { label: "Sturdy frame with more body mass", type: "taeeum" },
+      { label: "Developed chest, weaker lower body", type: "soyang" },
+      { label: "Slender and small-framed", type: "soeum" },
+    ],
+  },
+  {
+    id: 2,
+    text: "How's your digestion?",
+    options: [
+      { label: "Average", type: "taeyang" },
+      { label: "Eat well and digest easily", type: "taeeum" },
+      { label: "Eat fast, in a hurry", type: "soyang" },
+      { label: "Feel bloated even with small meals", type: "soeum" },
+    ],
+  },
+  {
+    id: 3,
+    text: "Which is harder for you, heat or cold?",
+    options: [
+      { label: "Both are fine", type: "taeyang" },
+      { label: "Sensitive to heat", type: "taeeum" },
+      { label: "Run hot, sensitive to heat", type: "soyang" },
+      { label: "Very sensitive to cold", type: "soeum" },
+    ],
+  },
+  {
+    id: 4,
+    text: "How do you sweat?",
+    options: [
+      { label: "A moderate amount", type: "taeyang" },
+      { label: "Sweat a lot, feel refreshed after", type: "taeeum" },
+      { label: "Sweat easily when hot", type: "soyang" },
+      { label: "Sweat little, feel drained after", type: "soeum" },
+    ],
+  },
+  {
+    id: 5,
+    text: "Which personality fits you best?",
+    options: [
+      { label: "Bold and original", type: "taeyang" },
+      { label: "Easygoing and steady", type: "taeeum" },
+      { label: "Lively and quick-tempered", type: "soyang" },
+      { label: "Meticulous and introverted", type: "soeum" },
+    ],
+  },
+  {
+    id: 6,
+    text: "What food do you gravitate to?",
+    options: [
+      { label: "Light, plain food", type: "taeyang" },
+      { label: "Meat and rich food", type: "taeeum" },
+      { label: "Cool food and seafood", type: "soyang" },
+      { label: "Warm, easy-to-digest food", type: "soeum" },
+    ],
+  },
+  {
+    id: 7,
+    text: "How much water do you drink?",
+    options: [
+      { label: "Average amount", type: "taeyang" },
+      { label: "A lot", type: "taeeum" },
+      { label: "Get thirsty often", type: "soyang" },
+      { label: "Not much", type: "soeum" },
+    ],
+  },
+  {
+    id: 8,
+    text: "How's your sleep and condition?",
+    options: [
+      { label: "Sleep well", type: "taeyang" },
+      { label: "Sleep but don't feel fully rested", type: "taeeum" },
+      { label: "Hard to fall asleep, light sleeper", type: "soyang" },
+      { label: "Sensitive, wake up easily", type: "soeum" },
+    ],
+  },
+  {
+    id: 9,
+    text: "When you're stressed?",
+    options: [
+      { label: "Express it outwardly", type: "taeyang" },
+      { label: "Hold it in", type: "taeeum" },
+      { label: "Get angry easily", type: "soyang" },
+      { label: "Digestion suffers first", type: "soeum" },
+    ],
+  },
+  {
+    id: 10,
+    text: "What's your usual digestive rhythm?",
+    options: [
+      { label: "Regular", type: "taeyang" },
+      { label: "Generally smooth", type: "taeeum" },
+      { label: "Alternates between constipation and diarrhea", type: "soyang" },
+      { label: "Loose or sensitive", type: "soeum" },
+    ],
+  },
+];
+
+export function getQuizQuestions(locale: Locale): QuizQuestion[] {
+  return locale === "en" ? quizQuestionsEn : quizQuestionsKo;
+}
+
 export interface QuizResult {
   type: ConstitutionType;
   title: string;
@@ -124,7 +233,7 @@ export interface QuizResult {
   clinic: { label: string; href: string };
 }
 
-export const quizResults: Record<ConstitutionType, QuizResult> = {
+const quizResultsKo: Record<ConstitutionType, QuizResult> = {
   taeyang: {
     type: "taeyang",
     title: "태양인",
@@ -179,6 +288,65 @@ export const quizResults: Record<ConstitutionType, QuizResult> = {
   },
 };
 
+const quizResultsEn: Record<ConstitutionType, QuizResult> = {
+  taeyang: {
+    type: "taeyang",
+    title: "Taeyang (Greater Yang)",
+    tagline: "A rare type with a developed upper body",
+    summary:
+      "Strong lung energy gives you a developed upper body and an upright spirit — a type rarely seen even in Korean medicine.",
+    features: [
+      "Developed upper body — shoulders and chest",
+      "Bold, original, and enterprising personality",
+      "Weaker lower body — leg and lower back care matters",
+    ],
+    clinic: { label: "Custom Herbal Tonic", href: "/care/custom-tonic" },
+  },
+  taeeum: {
+    type: "taeeum",
+    title: "Taeeum (Greater Yin)",
+    tagline: "A type that gains weight easily",
+    summary:
+      "A large frame and strong absorption mean you gain weight easily — consistent care is key.",
+    features: [
+      "Sturdy frame with more body mass",
+      "Easygoing, steady personality with strong patience",
+      "Feel best after sweating it out",
+    ],
+    clinic: { label: "Custom Diet Program", href: "/diet/custom" },
+  },
+  soyang: {
+    type: "soyang",
+    title: "Soyang (Lesser Yang)",
+    tagline: "Runs hot and quick-tempered",
+    summary:
+      "Developed spleen energy makes you quick to react and prone to heat — managing internal heat is key.",
+    features: [
+      "Developed chest, weaker lower body",
+      "Lively, quick-tempered, and sharp reflexes",
+      "Prone to internal heat — thirst & sleep care matter",
+    ],
+    clinic: { label: "Gongjindan & Gyeongokgo", href: "/care/gongjindan" },
+  },
+  soeum: {
+    type: "soeum",
+    title: "Soeum (Lesser Yin)",
+    tagline: "Weaker digestion, runs cold",
+    summary:
+      "Weak digestion and a cold constitution mean even small strain can make you sensitive — careful, attentive care is needed.",
+    features: [
+      "Slender, small-framed body",
+      "Meticulous, introverted personality",
+      "Cold digestive system — warm food and rest matter",
+    ],
+    clinic: { label: "Postpartum Diet", href: "/diet/postpartum" },
+  },
+};
+
+export function getQuizResults(locale: Locale): Record<ConstitutionType, QuizResult> {
+  return locale === "en" ? quizResultsEn : quizResultsKo;
+}
+
 // 동점 시 우선순위: 태음 > 소양 > 소음 > 태양
 export const RESULT_PRIORITY: ConstitutionType[] = [
   "taeeum",
@@ -187,5 +355,51 @@ export const RESULT_PRIORITY: ConstitutionType[] = [
   "taeyang",
 ];
 
-export const QUIZ_DISCLAIMER =
-  "본 진단은 참고용 간이 테스트이며, 정확한 체질 판별과 처방은 반드시 한의사의 대면 진료가 필요합니다.";
+export const quizDisclaimer = {
+  ko: "본 진단은 참고용 간이 테스트이며, 정확한 체질 판별과 처방은 반드시 한의사의 대면 진료가 필요합니다.",
+  en: "This is a simplified test for reference only. An accurate constitution diagnosis and prescription requires an in-person consultation with a licensed Korean medicine doctor.",
+};
+
+export const quizUi = {
+  ko: {
+    heading: "1분 체질 자가진단",
+    title: "내 몸에 맞는 체질 찾기",
+    introLine1: "나에게 가까운 답을 고르면, 사상체질 중 어떤 유형에 가까운지와",
+    introLine2: "어울리는 관리 방향을 알려드려요. 문항 10개, 1분이면 충분합니다.",
+    start: "시작하기",
+    prev: "← 이전 문항",
+    analyzing: "체질을 분석하고 있어요…",
+    resultLabel: "RESULT",
+    youArePrefix: "당신은 ",
+    youAreSuffix: "입니다",
+    recommended: (label: string) => `추천 관리: ${label} 자세히 보기`,
+    bookConsult: "내 체질에 맞는 상담 신청하기",
+    share: "결과 공유하기",
+    copied: "결과 링크를 복사했어요",
+    restart: "다시 진단하기",
+    shareTitle: "체질 자가진단 결과",
+    shareText: (title: string, tagline: string) =>
+      `[리브한의원 1분 체질 자가진단] 나는 ${title} — ${tagline}`,
+  },
+  en: {
+    heading: "1-Minute Constitution Check",
+    title: "Find Your Body's Constitution",
+    introLine1:
+      "Pick the answers closest to you, and we'll tell you which Sasang constitution type you're closest to",
+    introLine2: "and how to care for it. 10 questions, just 1 minute.",
+    start: "Start",
+    prev: "← Previous",
+    analyzing: "Analyzing your constitution…",
+    resultLabel: "RESULT",
+    youArePrefix: "You are ",
+    youAreSuffix: "",
+    recommended: (label: string) => `Recommended care: ${label} — see details`,
+    bookConsult: "Book a Consultation for My Type",
+    share: "Share My Result",
+    copied: "Result link copied",
+    restart: "Retake the Test",
+    shareTitle: "Constitution Check Result",
+    shareText: (title: string, tagline: string) =>
+      `[Liv Hanbang Clinic 1-Min Constitution Check] I'm ${title} — ${tagline}`,
+  },
+};

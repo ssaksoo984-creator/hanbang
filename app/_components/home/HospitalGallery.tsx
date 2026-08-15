@@ -7,27 +7,24 @@ import type { Swiper as SwiperClass } from "swiper/types";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "../ui/SectionTitle";
 import SafeImage from "../ui/SafeImage";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { galleryImages as galleryImagesContent, galleryUi } from "../../_i18n/content";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const galleryImages = [
-  { src: "/images/gallery/1.jpg", alt: "병원 로비" },
-  { src: "/images/gallery/2.jpg", alt: "상담실" },
-  { src: "/images/gallery/3.jpg", alt: "진료실" },
-  { src: "/images/gallery/4.jpg", alt: "대기실" },
-  { src: "/images/gallery/5.jpg", alt: "한약 조제실" },
-  { src: "/images/gallery/6.jpg", alt: "추나요법실" },
-  { src: "/images/gallery/7.jpg", alt: "원장실" },
-  { src: "/images/gallery/8.jpg", alt: "물리치료실" },
-];
+type GalleryImage = { src: string; alt: string };
 
 /* ── 모달 컴포넌트 ─────────────────────────────────── */
 function GalleryModal({
   initialIndex,
   onClose,
+  galleryImages,
+  closeLabel,
 }: {
   initialIndex: number;
   onClose: () => void;
+  galleryImages: readonly GalleryImage[];
+  closeLabel: string;
 }) {
   const modalSwiperRef = useRef<SwiperClass | null>(null);
 
@@ -56,7 +53,7 @@ function GalleryModal({
       >
         <button
           onClick={onClose}
-          aria-label="닫기"
+          aria-label={closeLabel}
           className="absolute -top-12 right-4 text-canvas/70 hover:text-canvas transition-colors z-10"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -117,13 +114,16 @@ export default function HospitalGallery() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { locale } = useLocale();
+  const galleryImages = galleryImagesContent[locale];
+  const ui = galleryUi[locale];
 
   const startAutoplay = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setActiveIndex((i) => (i + 1) % galleryImages.length);
     }, 3500);
-  }, []);
+  }, [galleryImages.length]);
 
   useEffect(() => {
     startAutoplay();
@@ -153,14 +153,14 @@ export default function HospitalGallery() {
   return (
     <section className="py-24 px-6 bg-night border-t border-canvas/10">
       <div className="max-w-6xl mx-auto">
-        <SectionTitle en="HOSPITAL GALLERY" ko="병원 갤러리" center light />
+        <SectionTitle en="HOSPITAL GALLERY" ko={ui.heading} center light />
 
         <div className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
           {/* 왼쪽 — 크게 보여지는 대표 이미지 */}
           <button
             onClick={() => handleOpen(activeIndex)}
             className="group relative h-[320px] sm:h-[420px] lg:h-[480px] w-full overflow-hidden rounded-2xl focus:outline-none"
-            aria-label={`${active.alt} 크게 보기`}
+            aria-label={ui.viewLarge(active.alt)}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -202,7 +202,7 @@ export default function HospitalGallery() {
                     ? "ring-gold opacity-100"
                     : "ring-transparent opacity-55 hover:opacity-90"
                 }`}
-                aria-label={`${img.alt} 선택`}
+                aria-label={ui.select(img.alt)}
               >
                 <SafeImage
                   src={img.src}
@@ -221,7 +221,7 @@ export default function HospitalGallery() {
             onClick={() => handleOpen(activeIndex)}
             className="inline-flex items-center gap-2 border border-canvas/30 px-8 py-3 text-canvas text-xs tracking-[0.25em] transition-colors duration-300 hover:border-gold hover:text-gold"
           >
-            더보기
+            {ui.more}
             <svg width="12" height="9" viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1">
               <line x1="0" y1="5" x2="12" y2="5" />
               <polyline points="8,1 12,5 8,9" />
@@ -231,7 +231,12 @@ export default function HospitalGallery() {
       </div>
 
       {selectedIndex !== null && (
-        <GalleryModal initialIndex={selectedIndex} onClose={handleClose} />
+        <GalleryModal
+          initialIndex={selectedIndex}
+          onClose={handleClose}
+          galleryImages={galleryImages}
+          closeLabel={ui.close}
+        />
       )}
     </section>
   );

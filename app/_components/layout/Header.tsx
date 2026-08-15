@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { mainNav, aboutNav, treatmentNav } from "./nav";
+import { getMainNav, getAboutNav, getTreatmentNav } from "./nav";
 import MobileMenu from "./MobileMenu";
 import LanguageSwitcher from "./LanguageSwitcher";
 import BrandMark from "./BrandMark";
 import { languages } from "../../_data/languages";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { brandName, nav as navText } from "../../_i18n/content";
 
 function DropdownMenu({
   items,
@@ -70,6 +72,7 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
+  const { locale } = useLocale();
 
   useEffect(() => {
     if (!isHome) return;
@@ -82,6 +85,10 @@ export default function Header() {
   }, [isHome]);
 
   const light = isHome && !scrolled;
+
+  const mainNav = getMainNav(locale);
+  const aboutNav = getAboutNav(locale);
+  const treatmentNav = getTreatmentNav(locale);
 
   return (
     <header className="relative h-16">
@@ -105,13 +112,13 @@ export default function Header() {
             }`}
           >
             <BrandMark className="w-5 h-5" />
-            리브한의원
+            {brandName[locale]}
           </Link>
         </motion.div>
 
         {/* 데스크탑 내비게이션 */}
         <nav className="hidden md:flex items-center gap-8">
-          <DropdownMenu items={aboutNav} label="병원소개" light={light} />
+          <DropdownMenu items={aboutNav} label={navText[locale].about} light={light} />
 
           {treatmentNav.map((group) => (
             <DropdownMenu key={group.href} items={group.sub} label={group.label} light={light} />

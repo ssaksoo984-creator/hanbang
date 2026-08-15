@@ -1,36 +1,39 @@
 import { subTreatments } from "../../_data/subTreatments";
+import { nav as navText, categoryLabels } from "../../_i18n/content";
+import type { Locale } from "../../_i18n/LanguageContext";
 
-export const mainNav = [
-  { label: "이벤트", href: "/event" },
-] as const;
+export interface NavItem {
+  label: string;
+  href: string;
+}
 
-export const aboutNav = [
-  { label: "병원소개", href: "/about" },
-  { label: "의료진 소개", href: "/about/doctors" },
-  { label: "오시는 길", href: "/about/location" },
-  { label: "비급여 안내", href: "/about/fees" },
-] as const;
+export function getMainNav(locale: Locale): NavItem[] {
+  return [{ label: navText[locale].events, href: "/event" }];
+}
+
+export function getAboutNav(locale: Locale): NavItem[] {
+  const t = navText[locale];
+  return [
+    { label: t.about, href: "/about" },
+    { label: t.doctors, href: "/about/doctors" },
+    { label: t.location, href: "/about/location" },
+    { label: t.fees, href: "/about/fees" },
+  ];
+}
 
 interface TreatmentNavGroup {
   label: string;
   href: string;
-  sub: { label: string; href: string }[];
+  sub: NavItem[];
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  diet: "다이어트 클리닉",
-  beauty: "미용 클리닉",
-  posture: "체형교정 클리닉",
-  spine: "척추관절 클리닉",
-  care: "보양 클리닉",
-};
 
 const CATEGORY_ORDER = ["diet", "beauty", "posture", "spine", "care"] as const;
 
-export const treatmentNav: TreatmentNavGroup[] = CATEGORY_ORDER.map(
-  (category) => {
+export function getTreatmentNav(locale: Locale): TreatmentNavGroup[] {
+  const labels = categoryLabels[locale];
+  return CATEGORY_ORDER.map((category) => {
     const items = subTreatments.filter((t) => t.category === category);
-    const label = CATEGORY_LABELS[category];
+    const label = labels[category];
     const href = items[0].categoryHref;
     return {
       label,
@@ -38,10 +41,10 @@ export const treatmentNav: TreatmentNavGroup[] = CATEGORY_ORDER.map(
       sub: [
         { label, href },
         ...items.map((t) => ({
-          label: t.title,
+          label: locale === "en" ? t.titleEn : t.title,
           href: `${t.categoryHref}/${t.slug}`,
         })),
       ],
     };
-  }
-);
+  });
+}

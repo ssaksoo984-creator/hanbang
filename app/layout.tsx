@@ -8,6 +8,7 @@ import PopupBanner from "./_components/layout/PopupBanner";
 import SideIconBar from "./_components/layout/SideIconBar";
 import { popups } from "./_data/popup";
 import { sideIcons } from "./_data/sideIcons";
+import { LanguageProvider } from "./_i18n/LanguageContext";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -73,14 +74,16 @@ export default function RootLayout({
       className={`${cormorant.variable} ${notoSerifKr.variable} ${notoSansKr.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans-ko">
-        <PopupBanner popups={popups} />
-        <div className="fixed top-0 inset-x-0 z-50">
-          <EventBanner />
-          <Header />
-        </div>
-        <SideIconBar items={sideIcons} />
-        <main className="flex-1 pt-[6.5rem]">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <PopupBanner popups={popups} />
+          <div className="fixed top-0 inset-x-0 z-50">
+            <EventBanner />
+            <Header />
+          </div>
+          <SideIconBar items={sideIcons} />
+          <main className="flex-1 pt-[6.5rem]">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

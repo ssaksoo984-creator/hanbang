@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const MESSAGE = "리브한의원 여름맞이 이벤트 · 다이어트 첫 상담 무료 진행 중";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { eventBanner } from "../../_i18n/content";
 
 export default function EventBanner() {
+  const { locale } = useLocale();
+  const message = eventBanner[locale];
+
   return (
     <div className="relative w-full h-10 bg-sand border-b border-rule flex items-center overflow-hidden">
       {/* 배경 광택 효과 */}
@@ -26,7 +29,7 @@ export default function EventBanner() {
             aria-hidden={i === 1}
             className="shimmer-text font-sans-ko font-medium text-[10px] sm:text-sm tracking-[0.05em] sm:tracking-[0.2em] select-none pr-10 sm:pr-16"
           >
-            {MESSAGE}
+            {message}
           </span>
         ))}
       </motion.div>

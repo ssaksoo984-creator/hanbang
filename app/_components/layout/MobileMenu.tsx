@@ -3,11 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { mainNav, aboutNav, treatmentNav } from "./nav";
+import { getMainNav, getAboutNav, getTreatmentNav } from "./nav";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { brandName, nav as navText, mobileMenu as mobileMenuText } from "../../_i18n/content";
 
 export default function MobileMenu({ light = false }: { light?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { locale } = useLocale();
 
   // 라우트 변경 시 메뉴 닫기
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -24,12 +27,17 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
     };
   }, [open]);
 
+  const mainNav = getMainNav(locale);
+  const aboutNav = getAboutNav(locale);
+  const treatmentNav = getTreatmentNav(locale);
+  const t = mobileMenuText[locale];
+
   return (
     <>
       {/* 햄버거 버튼 */}
       <button
         onClick={() => setOpen(!open)}
-        aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
+        aria-label={open ? t.closeMenu : t.openMenu}
         className={`md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] transition-colors ${
           light && !open ? "text-canvas" : "text-ink"
         }`}
@@ -68,11 +76,11 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
         {/* 패널 헤더 */}
         <div className="flex items-center justify-between px-6 h-16 border-b border-rule">
           <Link href="/" className="font-serif-ko font-light text-xl tracking-wide text-ink">
-            리브한의원
+            {brandName[locale]}
           </Link>
           <button
             onClick={() => setOpen(false)}
-            aria-label="메뉴 닫기"
+            aria-label={t.closeMenu}
             className="w-8 h-8 flex items-center justify-center text-ink"
           >
             <svg
@@ -95,7 +103,7 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
             href="/"
             className="py-3 text-sm tracking-widest text-ink border-b border-rule hover:text-gold transition-colors"
           >
-            홈
+            {navText[locale].home}
           </Link>
 
           {mainNav.map((item) => (
@@ -109,7 +117,7 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
           ))}
 
           <p className="pt-6 pb-2 text-xs tracking-[0.2em] text-dim">
-            병원소개
+            {navText[locale].about}
           </p>
           {aboutNav.map((item) => (
             <Link
@@ -122,7 +130,7 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
           ))}
 
           <p className="pt-6 pb-2 text-xs tracking-[0.2em] text-dim">
-            시술안내
+            {navText[locale].treatments}
           </p>
           {treatmentNav.map((group) => (
             <div key={group.href}>
@@ -148,7 +156,7 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
             href="/contact"
             className="block w-full py-3 text-center text-sm tracking-widest text-canvas bg-ink hover:bg-night transition-colors"
           >
-            상담 신청
+            {navText[locale].consult}
           </Link>
         </div>
       </div>

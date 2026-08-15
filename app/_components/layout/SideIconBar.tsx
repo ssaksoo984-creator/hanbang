@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { SideIconItem } from "../../_data/sideIcons";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { sideIcons as sideIconsText } from "../../_i18n/content";
 
 interface SideIconBarProps {
   items: SideIconItem[];
@@ -29,6 +31,8 @@ const icons = {
 
 export default function SideIconBar({ items }: SideIconBarProps) {
   const [showTop, setShowTop] = useState(false);
+  const { locale } = useLocale();
+  const t = sideIconsText[locale];
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > window.innerHeight);
@@ -49,7 +53,7 @@ export default function SideIconBar({ items }: SideIconBarProps) {
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href={item.href}
-                aria-label={item.label}
+                aria-label={t[item.id]}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-ink text-canvas hover:bg-gold hover:text-ink transition-colors duration-300"
               >
                 {icons[item.id]}
@@ -61,7 +65,7 @@ export default function SideIconBar({ items }: SideIconBarProps) {
                 href={item.href}
                 target={item.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                aria-label={item.label}
+                aria-label={t[item.id]}
                 className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-ink text-canvas hover:bg-gold hover:text-ink transition-colors duration-300 inline-flex"
               >
                 {icons[item.id]}
@@ -75,7 +79,7 @@ export default function SideIconBar({ items }: SideIconBarProps) {
         animate={{ opacity: showTop ? 1 : 0, scale: showTop ? 1 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="맨 위로"
+        aria-label={t.top}
         whileHover={showTop ? { scale: 1.1 } : undefined}
         whileTap={showTop ? { scale: 0.95 } : undefined}
         className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-ink text-canvas text-[11px] tracking-wide hover:bg-gold hover:text-ink transition-colors duration-300 ${

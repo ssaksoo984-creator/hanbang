@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { LanguageOption } from "../../_data/languages";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { languageSwitcher } from "../../_i18n/content";
 
 interface LanguageSwitcherProps {
   languages: LanguageOption[];
@@ -10,13 +12,13 @@ interface LanguageSwitcherProps {
 
 export default function LanguageSwitcher({ languages, light = false }: LanguageSwitcherProps) {
   const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState(languages[0]);
+  const { locale, setLocale } = useLocale();
 
   return (
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label="언어 선택"
+        aria-label={languageSwitcher[locale].selectLanguage}
         className={`flex items-center justify-center transition-colors hover:text-gold ${
           light ? "text-canvas" : "text-ink"
         }`}
@@ -32,11 +34,11 @@ export default function LanguageSwitcher({ languages, light = false }: LanguageS
             <button
               key={lang.code}
               onClick={() => {
-                setCurrent(lang);
+                setLocale(lang.code);
                 setOpen(false);
               }}
               className={`block w-full text-left px-4 py-2 text-xs tracking-widest transition-colors ${
-                lang.code === current.code
+                lang.code === locale
                   ? "text-gold"
                   : "text-ink hover:text-gold hover:bg-rule/30"
               }`}

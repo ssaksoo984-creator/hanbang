@@ -5,65 +5,23 @@ import { motion } from "framer-motion";
 import SectionTitle from "../ui/SectionTitle";
 import BrandMark from "../layout/BrandMark";
 import SafeImage from "../ui/SafeImage";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { treatments as treatmentsContent, treatmentsUi } from "../../_i18n/content";
 
-const treatments = [
-  {
-    keyword: "다이어트",
-    label: "클리닉",
-    en: "DIET",
-    href: "/diet",
-    desc: "체질 맞춤·산후·성장기 다이어트",
-  },
-  {
-    keyword: "미용",
-    label: "클리닉",
-    en: "BEAUTY",
-    href: "/beauty",
-    desc: "한방 동안침·약침 리프팅",
-  },
-  {
-    keyword: "체형교정",
-    label: "클리닉",
-    en: "POSTURE",
-    href: "/posture",
-    desc: "추나요법·거북목·성장판 검사",
-  },
-  {
-    keyword: "척추관절",
-    label: "클리닉",
-    en: "SPINE & JOINT",
-    href: "/spine",
-    desc: "허리·목 디스크, 어깨·관절 통증",
-  },
-  {
-    keyword: "교통사고",
-    label: "클리닉",
-    en: "ACCIDENT",
-    href: "/spine/accident",
-    desc: "자동차보험 처리·입원 치료 가능",
-  },
-  {
-    keyword: "보양",
-    label: "클리닉",
-    en: "WELLNESS",
-    href: "/care",
-    desc: "공진단·경옥고, 체질 맞춤 보약",
-  },
-];
-
-const leftItems = treatments.slice(0, 3);
-const rightItems = treatments.slice(3, 6);
-
-type Treatment = (typeof treatments)[number];
+type Treatment =
+  | (typeof treatmentsContent)["ko"][number]
+  | (typeof treatmentsContent)["en"][number];
 
 function TreatmentBox({
   item,
   index,
   fromRight,
+  detailLabel,
 }: {
   item: Treatment;
   index: number;
   fromRight?: boolean;
+  detailLabel: string;
 }) {
   return (
     <motion.div
@@ -82,7 +40,7 @@ function TreatmentBox({
         </h3>
         <p className="font-sans-ko text-canvas/55 text-xs mt-2 leading-relaxed">{item.desc}</p>
         <div className="mt-3 flex items-center gap-1.5 text-canvas/45 transition-colors duration-300 group-hover:text-sand">
-          <span className="text-[10px] tracking-widest">자세히</span>
+          <span className="text-[10px] tracking-widest">{detailLabel}</span>
           <svg
             width="12"
             height="9"
@@ -102,6 +60,12 @@ function TreatmentBox({
 }
 
 export default function TreatmentCards() {
+  const { locale } = useLocale();
+  const treatments = treatmentsContent[locale];
+  const ui = treatmentsUi[locale];
+  const leftItems = treatments.slice(0, 3);
+  const rightItems = treatments.slice(3, 6);
+
   return (
     <section className="relative overflow-hidden bg-navy py-24 px-6">
       <SafeImage
@@ -121,13 +85,13 @@ export default function TreatmentCards() {
       <div className="absolute inset-0 bg-navy/75" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <SectionTitle en="TREATMENTS" ko="진료분야" center light />
+        <SectionTitle en="TREATMENTS" ko={ui.heading} center light />
 
         <div className="mt-16 grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
           {/* 왼쪽 3개 */}
           <div className="order-2 flex flex-col gap-4 lg:order-1">
             {leftItems.map((item, i) => (
-              <TreatmentBox key={item.href} item={item} index={i} />
+              <TreatmentBox key={item.href} item={item} index={i} detailLabel={ui.detail} />
             ))}
           </div>
 
@@ -144,17 +108,15 @@ export default function TreatmentCards() {
               strokeWidth={1}
               animate
             />
-            <p className="mt-6 text-center font-serif-ko font-light text-sm leading-relaxed tracking-wide text-canvas sm:text-base">
-              환자를 위한
-              <br />
-              맞춤 치료 설계
+            <p className="mt-6 whitespace-pre-line text-center font-serif-ko font-light text-sm leading-relaxed tracking-wide text-canvas sm:text-base">
+              {ui.caption}
             </p>
           </motion.div>
 
           {/* 오른쪽 3개 */}
           <div className="order-3 flex flex-col gap-4">
             {rightItems.map((item, i) => (
-              <TreatmentBox key={item.href} item={item} index={i} fromRight />
+              <TreatmentBox key={item.href} item={item} index={i} fromRight detailLabel={ui.detail} />
             ))}
           </div>
         </div>

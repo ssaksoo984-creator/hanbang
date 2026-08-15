@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Button from "./Button";
 import SafeImage from "./SafeImage";
+import { useLocale } from "../../_i18n/LanguageContext";
+import { consultCta } from "../../_i18n/content";
 
 interface ConsultCTAProps {
   title?: string;
@@ -17,11 +19,16 @@ const textVariants = {
 };
 
 export default function ConsultCTA({
-  title = "지금, 상담을 시작하세요",
-  subtitle = "전문 한의사와의 1:1 무료 상담을 통해\n체질에 맞는 치료법을 찾아드립니다.",
+  title,
+  subtitle,
   bgImage,
   bgImageMobile,
 }: ConsultCTAProps) {
+  const { locale } = useLocale();
+  const t = consultCta[locale];
+  const resolvedTitle = title ?? t.title;
+  const resolvedSubtitle = subtitle ?? t.subtitle;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -66,21 +73,21 @@ export default function ConsultCTA({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="font-serif text-sand text-xs tracking-[0.35em] mb-5"
         >
-          CONSULTATION
+          {t.eyebrow}
         </motion.p>
         <motion.h2
           variants={textVariants}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="font-serif-ko text-canvas text-4xl md:text-5xl font-light tracking-tight leading-snug mb-6"
         >
-          {title}
+          {resolvedTitle}
         </motion.h2>
         <motion.p
           variants={textVariants}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-dim text-sm leading-relaxed mb-10 whitespace-pre-line"
         >
-          {subtitle}
+          {resolvedSubtitle}
         </motion.p>
 
         <motion.div
@@ -103,7 +110,7 @@ export default function ConsultCTA({
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <Button variant="outline-light" size="lg" href="/contact">
-            온라인 상담 신청
+            {t.bookOnline}
           </Button>
         </motion.div>
       </motion.div>

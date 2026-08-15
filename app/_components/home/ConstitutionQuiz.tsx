@@ -5,12 +5,14 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "../ui/SectionTitle";
 import {
-  quizQuestions,
-  quizResults,
+  getQuizQuestions,
+  getQuizResults,
   RESULT_PRIORITY,
-  QUIZ_DISCLAIMER,
+  quizDisclaimer,
+  quizUi,
   type ConstitutionType,
 } from "../../_data/constitutionQuiz";
+import { useLocale } from "../../_i18n/LanguageContext";
 
 type Stage = "intro" | "quiz" | "loading" | "result";
 
@@ -40,6 +42,12 @@ export default function ConstitutionQuiz() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<ConstitutionType[]>([]);
   const [copied, setCopied] = useState(false);
+  const { locale } = useLocale();
+
+  const quizQuestions = getQuizQuestions(locale);
+  const quizResults = getQuizResults(locale);
+  const disclaimer = quizDisclaimer[locale];
+  const ui = quizUi[locale];
 
   const total = quizQuestions.length;
   const question = quizQuestions[step];
@@ -81,12 +89,12 @@ export default function ConstitutionQuiz() {
 
   const handleShare = async () => {
     if (!result) return;
-    const shareText = `[리브한의원 1분 체질 자가진단] 나는 ${result.title} — ${result.tagline}`;
+    const shareText = ui.shareText(result.title, result.tagline);
     const shareUrl = window.location.href;
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: "체질 자가진단 결과", text: shareText, url: shareUrl });
+        await navigator.share({ title: ui.shareTitle, text: shareText, url: shareUrl });
       } catch {
         // 사용자가 공유를 취소한 경우 무시
       }
@@ -102,7 +110,7 @@ export default function ConstitutionQuiz() {
   return (
     <section className="bg-canvas py-24 px-6">
       <div className="mx-auto max-w-3xl">
-        <SectionTitle en="CONSTITUTION CHECK" ko="1분 체질 자가진단" center enColor="text-night" />
+        <SectionTitle en="CONSTITUTION CHECK" ko={ui.heading} center enColor="text-night" />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -123,15 +131,15 @@ export default function ConstitutionQuiz() {
                 className="text-center"
               >
                 <p className="font-serif-ko text-ink text-xl font-light sm:text-2xl">
-                  내 몸에 맞는 체질 찾기
+                  {ui.title}
                 </p>
                 <p className="mt-4 font-sans-ko text-dim text-sm leading-relaxed">
-                  나에게 가까운 답을 고르면, 사상체질 중 어떤 유형에 가까운지와
+                  {ui.introLine1}
                   <br className="hidden sm:block" />
-                  어울리는 관리 방향을 알려드려요. 문항 10개, 1분이면 충분합니다.
+                  {ui.introLine2}
                 </p>
                 <p className="mx-auto mt-6 max-w-md font-sans-ko text-ink/45 text-[11px] leading-relaxed">
-                  {QUIZ_DISCLAIMER}
+                  {disclaimer}
                 </p>
                 <motion.button
                   onClick={handleStart}
@@ -140,7 +148,7 @@ export default function ConstitutionQuiz() {
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   className="mt-8 inline-flex items-center justify-center rounded-full bg-ink px-10 py-4 font-sans-ko text-canvas text-sm tracking-widest transition-colors duration-300 hover:bg-night"
                 >
-                  시작하기
+                  {ui.start}
                 </motion.button>
               </motion.div>
             )}
@@ -190,7 +198,7 @@ export default function ConstitutionQuiz() {
                       onClick={handlePrev}
                       className="font-sans-ko text-dim text-xs tracking-widest transition-colors hover:text-ink"
                     >
-                      ← 이전 문항
+                      {ui.prev}
                     </button>
                   )}
                 </div>
@@ -213,7 +221,7 @@ export default function ConstitutionQuiz() {
                   className="mx-auto mb-6 h-10 w-10 rounded-full border-2 border-rule border-t-gold"
                 />
                 <p className="font-serif-ko font-light text-ink text-sm tracking-widest">
-                  체질을 분석하고 있어요…
+                  {ui.analyzing}
                 </p>
               </motion.div>
             )}
@@ -228,9 +236,11 @@ export default function ConstitutionQuiz() {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="text-center"
               >
-                <p className="font-serif text-night text-xs tracking-[0.3em] mb-3">RESULT</p>
+                <p className="font-serif text-night text-xs tracking-[0.3em] mb-3">{ui.resultLabel}</p>
                 <h3 className="mb-3 font-serif-ko text-ink text-3xl font-light sm:text-4xl">
-                  당신은 <span className="text-gold">{result.title}</span>입니다
+                  {ui.youArePrefix}
+                  <span className="text-gold">{result.title}</span>
+                  {ui.youAreSuffix}
                 </h3>
                 <p className="mb-8 font-sans-ko text-dim text-sm">{result.summary}</p>
 
@@ -249,7 +259,7 @@ export default function ConstitutionQuiz() {
                   href={result.clinic.href}
                   className="group inline-flex items-center gap-1.5 font-sans-ko text-ink text-xs tracking-widest transition-colors hover:text-gold"
                 >
-                  추천 관리: {result.clinic.label} 자세히 보기
+                  {ui.recommended(result.clinic.label)}
                   <svg
                     width="12"
                     height="9"
@@ -269,28 +279,28 @@ export default function ConstitutionQuiz() {
                     href={`/contact?utm_source=constitution_quiz&utm_content=${result.type}`}
                     className="inline-flex items-center justify-center rounded-full bg-ink px-8 py-3.5 font-sans-ko text-canvas text-xs tracking-widest transition-colors duration-300 hover:bg-night"
                   >
-                    내 체질에 맞는 상담 신청하기
+                    {ui.bookConsult}
                   </Link>
                   <button
                     onClick={handleShare}
                     className="inline-flex items-center justify-center rounded-full border border-ink px-8 py-3.5 font-sans-ko text-ink text-xs tracking-widest transition-colors duration-300 hover:border-gold hover:text-gold"
                   >
-                    결과 공유하기
+                    {ui.share}
                   </button>
                 </div>
                 <p className="mt-3 h-4 font-sans-ko text-gold text-[11px]">
-                  {copied ? "결과 링크를 복사했어요" : ""}
+                  {copied ? ui.copied : ""}
                 </p>
 
                 <button
                   onClick={handleRestart}
                   className="mt-4 font-sans-ko text-dim text-xs tracking-widest transition-colors hover:text-ink"
                 >
-                  다시 진단하기
+                  {ui.restart}
                 </button>
 
                 <p className="mx-auto mt-8 max-w-md font-sans-ko text-ink/40 text-[11px] leading-relaxed">
-                  {QUIZ_DISCLAIMER}
+                  {disclaimer}
                 </p>
               </motion.div>
             )}
