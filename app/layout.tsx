@@ -6,6 +6,7 @@ import Footer from "./_components/layout/Footer";
 import EventBanner from "./_components/home/EventBanner";
 import PopupBanner from "./_components/layout/PopupBanner";
 import SideIconBar from "./_components/layout/SideIconBar";
+import LanguageGate from "./_components/layout/LanguageGate";
 import { popups } from "./_data/popup";
 import { sideIcons } from "./_data/sideIcons";
 import { LanguageProvider } from "./_i18n/LanguageContext";
@@ -75,6 +76,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans-ko">
         <LanguageProvider>
+          <LanguageGate />
           <PopupBanner popups={popups} />
           <div className="fixed top-0 inset-x-0 z-50">
             <EventBanner />
